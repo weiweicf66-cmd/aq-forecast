@@ -1,0 +1,51 @@
+{
+  "name": "AQ Forecast Daily",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "field": "cronExpression",
+              "expression": "0 7 * * *"
+            }
+          ]
+        }
+      },
+      "id": "schedule-trigger-1",
+      "name": "Daily 07:00 Asia/Shanghai",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.2,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForAllItems",
+        "language": "javaScript",
+        "jsCode": "// 见 n8n/code-node.js 获取完整源代码。\n// 简化版：把 code-node.js 的全部内容粘贴到这里替换。\nthrow new Error('请把 n8n/code-node.js 的内容粘贴到本节点的 jsCode 字段');"
+      },
+      "id": "code-build-and-commit-1",
+      "name": "Build forecast + commit",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [560, 300]
+    }
+  ],
+  "connections": {
+    "Daily 07:00 Asia/Shanghai": {
+      "main": [
+        [
+          {
+            "node": "Build forecast + commit",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "timezone": "Asia/Shanghai",
+    "executionOrder": "v1"
+  }
+}
