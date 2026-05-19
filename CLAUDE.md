@@ -8,6 +8,7 @@
 - **编排**: 本地 n8n（Docker）每日 07:00 Asia/Shanghai cron
 - **部署**: Vercel + GitHub main 分支自动构建
 - **Repo**: https://github.com/weiweicf66-cmd/aq-forecast
+- **生产 URL**: https://aq-forecast.vercel.app/
 
 ## 数据流
 ```
@@ -48,5 +49,6 @@ n8n (Schedule + Code) → Open-Meteo fetch → 蒙特卡洛合成集合 (1000 sa
 - [ ] **滚动残差替代固定 σ**：累积 30 天 (pred, obs) 后切到数据驱动 σ
 - [ ] **加 O3 / NO2** 维度
 - [ ] **Open-Meteo 中国大陆访问稳定性**：偶发延迟/限流。n8n Code 节点目前没加重试，必要时加 3 次重试 + 30s 超时
-- [ ] **首次推 GitHub** 前要先在 GitHub 网页建空仓库 `weiweicf66-cmd/aq-forecast`（未连 Vercel 前）
-- [ ] **Vercel 部署 URL** 写到这里：`https://___`（部署后填）
+- [x] ~~首次推 GitHub~~（已完成）
+- [x] ~~Vercel 部署~~（已完成，URL 见上）
+- [ ] **n8n 工作流尚未配置**：用户需装 Docker → 按 docs/n8n-setup.md 导入 workflow.json + 粘贴 code-node.js + 设 GitHub PAT。配完才有每日自动更新。
