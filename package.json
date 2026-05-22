@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:n8n": "node --env-file=.env.local scripts/build-n8n-code.mjs",
+    "forecast": "node scripts/generate-forecast.mjs",
+    "evaluate": "node --env-file=.env.local scripts/evaluate-forecasts.mjs"
   },
   "dependencies": {
     "next": "16.2.6",

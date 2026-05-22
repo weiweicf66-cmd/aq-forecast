@@ -26,9 +26,9 @@ async function fetch(url, options = {}) {
   };
 }
 
-const OWNER = "weiweicf66-cmd";
-const REPO = "aq-forecast";
-const BRANCH = "main";
+const OWNER = $vars.GITHUB_OWNER;
+const REPO = $vars.GITHUB_REPO;
+const BRANCH = $vars.GITHUB_BRANCH || "main";
 const TOKEN = $vars.GITHUB_TOKEN;
 const EVAL_WINDOW_DAYS = 14;
 

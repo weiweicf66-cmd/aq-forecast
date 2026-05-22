@@ -27,9 +27,17 @@
 
 ## 本地开发
 - `npm run dev` → http://localhost:3000
-- `node scripts/generate-forecast.mjs` 不经 n8n 重新生成数据（与 n8n 共享同一份算法）
-- `GITHUB_TOKEN=... node scripts/evaluate-forecasts.mjs` 跑评估（GITHUB_TOKEN 可选；public repo 无 token 也行但 60/h 限速）
+- `npm run forecast` 重新生成 forecast.json
+- `npm run evaluate` 重新生成 eval.json（读 `.env.local` 的 GITHUB_TOKEN）
+- `npm run build:n8n` 从 `n8n/*.js` 模板 + `.env.local` 生成 `n8n/*.local.js`（要粘到 n8n 的版本）
 - n8n 启动：`docker start n8n` 后访问 http://localhost:5678
+
+## 密钥管理
+- `.env.local`（gitignore）是 PAT 唯一来源
+- `n8n/code-node.js` 和 `eval-code-node.js` 用 `$vars.GITHUB_TOKEN` 占位（committable）
+- `n8n/*.local.js`（gitignore）由 `npm run build:n8n` 自动生成，含真实 token，粘到 n8n
+- **轮换 token**：改 `.env.local` → `npm run build:n8n` → 重新粘贴到 n8n
+- **改算法**：改 `n8n/*.js` → `npm run build:n8n` → 重新粘贴到 n8n
 
 ## 重要决策记录
 
