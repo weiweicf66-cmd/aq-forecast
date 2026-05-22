@@ -4,6 +4,7 @@ import type { ForecastDocument, EvalDocument } from "@/lib/types";
 import { Dashboard } from "@/components/Dashboard";
 import { DataFreshness } from "@/components/DataFreshness";
 import { EvalSummary } from "@/components/EvalSummary";
+import { RegionalMap } from "@/components/RegionalMap";
 
 async function loadJson<T>(file: string): Promise<T | null> {
   try {
@@ -31,6 +32,7 @@ export default async function Page() {
 
       {data ? (
         <>
+          <RegionalMap data={data} />
           <Dashboard data={data} />
           {evalData && <EvalSummary data={evalData} />}
           <footer className="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">

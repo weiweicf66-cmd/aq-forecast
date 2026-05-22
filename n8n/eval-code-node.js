@@ -32,12 +32,29 @@ const TOKEN = $vars.GITHUB_TOKEN;
 const EVAL_WINDOW_DAYS = 14;
 
 const CITIES = [
-  { id: "beijing",   name: "北京", lat: 39.9042, lon: 116.4074 },
-  { id: "shanghai",  name: "上海", lat: 31.2304, lon: 121.4737 },
-  { id: "guangzhou", name: "广州", lat: 23.1291, lon: 113.2644 },
-  { id: "shenzhen",  name: "深圳", lat: 22.5431, lon: 114.0579 },
-  { id: "chengdu",   name: "成都", lat: 30.5728, lon: 104.0668 },
-  { id: "xian",      name: "西安", lat: 34.3416, lon: 108.9398 },
+  { id: "beijing",      name: "北京",   lat: 39.9042, lon: 116.4074 },
+  { id: "tianjin",      name: "天津",   lat: 39.0851, lon: 117.1995 },
+  { id: "shijiazhuang", name: "石家庄", lat: 38.0428, lon: 114.5149 },
+  { id: "tangshan",     name: "唐山",   lat: 39.6320, lon: 118.1804 },
+  { id: "qinhuangdao",  name: "秦皇岛", lat: 39.9354, lon: 119.6004 },
+  { id: "handan",       name: "邯郸",   lat: 36.6256, lon: 114.5391 },
+  { id: "xingtai",      name: "邢台",   lat: 37.0682, lon: 114.5048 },
+  { id: "baoding",      name: "保定",   lat: 38.8748, lon: 115.4646 },
+  { id: "zhangjiakou",  name: "张家口", lat: 40.8242, lon: 114.9087 },
+  { id: "chengde",      name: "承德",   lat: 40.9758, lon: 117.9382 },
+  { id: "cangzhou",     name: "沧州",   lat: 38.3045, lon: 116.8388 },
+  { id: "langfang",     name: "廊坊",   lat: 39.5188, lon: 116.7035 },
+  { id: "hengshui",     name: "衡水",   lat: 37.7349, lon: 115.6705 },
+  { id: "shanghai",     name: "上海",   lat: 31.2304, lon: 121.4737 },
+  { id: "nanjing",      name: "南京",   lat: 32.0617, lon: 118.7778 },
+  { id: "suzhou",       name: "苏州",   lat: 31.2989, lon: 120.5853 },
+  { id: "hangzhou",     name: "杭州",   lat: 30.2741, lon: 120.1551 },
+  { id: "guangzhou",    name: "广州",   lat: 23.1291, lon: 113.2644 },
+  { id: "shenzhen",     name: "深圳",   lat: 22.5431, lon: 114.0579 },
+  { id: "dongguan",     name: "东莞",   lat: 23.0207, lon: 113.7517 },
+  { id: "chengdu",      name: "成都",   lat: 30.5728, lon: 104.0668 },
+  { id: "xian",         name: "西安",   lat: 34.3416, lon: 108.9398 },
+  { id: "wuhan",        name: "武汉",   lat: 30.5928, lon: 114.3055 },
 ];
 
 const PM25_BREAKS = [

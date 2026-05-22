@@ -1,0 +1,248 @@
+"use client";
+
+import { useEffect, useMemo, useRef, useState } from "react";
+import type { ForecastDocument, DailyDistribution } from "@/lib/types";
+import { CITIES } from "@/lib/cities";
+import { CATEGORY_HEX } from "@/lib/colors";
+import { AQI_CATEGORIES } from "@/lib/aqi";
+
+// ECharts 走 CDN 运行时加载（避免 npm install echarts 在用户网络上不稳定）
+const ECHARTS_CDN = "https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js";
+
+type EChartsInstance = {
+  setOption: (opt: unknown) => void;
+  resize: () => void;
+  dispose: () => void;
+};
+type EChartsGlobal = {
+  init: (el: HTMLElement) => EChartsInstance;
+  registerMap: (name: string, geo: unknown) => void;
+};
+
+function loadEcharts(): Promise<EChartsGlobal> {
+  const w = window as unknown as { echarts?: EChartsGlobal };
+  if (w.echarts) return Promise.resolve(w.echarts);
+  return new Promise((resolve, reject) => {
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${ECHARTS_CDN}"]`);
+    if (existing) {
+      existing.addEventListener("load", () =>
+        w.echarts ? resolve(w.echarts) : reject(new Error("ECharts CDN 加载后未挂到 window")),
+      );
+      existing.addEventListener("error", () => reject(new Error("ECharts CDN 加载失败")));
+      return;
+    }
+    const s = document.createElement("script");
+    s.src = ECHARTS_CDN;
+    s.async = true;
+    s.onload = () => (w.echarts ? resolve(w.echarts) : reject(new Error("ECharts CDN 加载后未挂到 window")));
+    s.onerror = () => reject(new Error("ECharts CDN 加载失败（jsDelivr 不通？）"));
+    document.head.appendChild(s);
+  });
+}
+
+function shortDate(dateStr: string) {
+  const d = new Date(dateStr + "T00:00:00+08:00");
+  return new Intl.DateTimeFormat("zh-CN", {
+    month: "numeric",
+    day: "numeric",
+    timeZone: "Asia/Shanghai",
+  }).format(d);
+}
+
+function weekdayLabel(dateStr: string) {
+  const d = new Date(dateStr + "T00:00:00+08:00");
+  return new Intl.DateTimeFormat("zh-CN", { weekday: "short", timeZone: "Asia/Shanghai" }).format(d);
+}
+
+export function RegionalMap({ data }: { data: ForecastDocument }) {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const chartRef = useRef<EChartsInstance | null>(null);
+  const [echartsReady, setEchartsReady] = useState(false);
+  const [echartsErr, setEchartsErr] = useState<string | null>(null);
+  const [selectedDayIdx, setSelectedDayIdx] = useState(0);
+
+  // 找一个有数据的城市，按它的 days 做时间轴
+  const days: string[] = useMemo(() => {
+    const sample = Object.values(data.cities).find((c) => c.days.length > 0);
+    return (sample?.days ?? []).map((d) => d.date);
+  }, [data]);
+
+  // 初始化 echarts + 加载地图
+  useEffect(() => {
+    if (!containerRef.current) return;
+    let cancelled = false;
+    let chart: EChartsInstance | null = null;
+
+    (async () => {
+      try {
+        const echarts = await loadEcharts();
+        if (cancelled) return;
+        const geoRes = await fetch("/geo/china.json");
+        if (!geoRes.ok) throw new Error("加载中国地图失败");
+        const geoJson = await geoRes.json();
+        if (cancelled) return;
+        echarts.registerMap("china", geoJson);
+        if (!containerRef.current) return;
+        chart = echarts.init(containerRef.current);
+        chartRef.current = chart;
+        setEchartsReady(true);
+
+        const handleResize = () => chart?.resize();
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+      } catch (e: unknown) {
+        if (!cancelled) setEchartsErr(e instanceof Error ? e.message : String(e));
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      chart?.dispose();
+      chartRef.current = null;
+    };
+  }, []);
+
+  // 数据变化时更新 option
+  useEffect(() => {
+    const chart = chartRef.current;
+    if (!chart || !echartsReady) return;
+    if (days.length === 0) return;
+    const dayIdx = Math.min(selectedDayIdx, days.length - 1);
+    const targetDate = days[dayIdx];
+
+    type Point = {
+      name: string;
+      value: [number, number, number]; // [lon, lat, dominantProb]
+      itemStyle: { color: string };
+      dayInfo: DailyDistribution;
+    };
+
+    const points: Point[] = CITIES.flatMap((city) => {
+      const cf = data.cities[city.id];
+      const day = cf?.days?.find((d) => d.date === targetDate);
+      if (!day) return [];
+      const dominantProb = day.categories[day.dominant] ?? 0;
+      return [
+        {
+          name: city.name,
+          value: [city.lon, city.lat, dominantProb],
+          itemStyle: { color: CATEGORY_HEX[day.dominant] },
+          dayInfo: day,
+        },
+      ];
+    });
+
+    chart.setOption({
+      backgroundColor: "transparent",
+      tooltip: {
+        trigger: "item",
+        formatter: (p: { data?: Point }) => {
+          const data = p.data;
+          if (!data?.dayInfo) return data?.name ?? "";
+          const cats = AQI_CATEGORIES.map(
+            (c) =>
+              `<div style="display:flex;justify-content:space-between;gap:12px;font-size:11px;"><span>${c}</span><span>${((data.dayInfo.categories[c] ?? 0) * 100).toFixed(0)}%</span></div>`,
+          ).join("");
+          return `
+            <div style="font-weight:600;margin-bottom:4px;">${data.name}</div>
+            <div style="font-size:11px;color:#888;margin-bottom:6px;">最可能：${data.dayInfo.dominant} · PM2.5 ${data.dayInfo.pm25_p10}–${data.dayInfo.pm25_p90}</div>
+            ${cats}
+          `;
+        },
+      },
+      geo: {
+        map: "china",
+        roam: true,
+        zoom: 1.2,
+        center: [110, 36],
+        scaleLimit: { min: 0.8, max: 6 },
+        itemStyle: {
+          areaColor: "#f4f4f5",
+          borderColor: "#d4d4d8",
+        },
+        emphasis: {
+          itemStyle: { areaColor: "#e4e4e7" },
+          label: { show: false },
+        },
+        label: { show: false },
+      },
+      series: [
+        {
+          type: "scatter",
+          coordinateSystem: "geo",
+          data: points,
+          symbolSize: (val: number[]) => 10 + (val[2] ?? 0) * 24, // 概率越高，点越大
+          label: {
+            show: true,
+            formatter: (p: { data?: Point }) => p.data?.name ?? "",
+            position: "right",
+            fontSize: 10,
+            color: "#52525b",
+          },
+          emphasis: {
+            label: { show: true, fontWeight: 600, color: "#18181b" },
+            scale: 1.3,
+          },
+        },
+      ],
+    });
+  }, [data, selectedDayIdx, days, echartsReady]);
+
+  if (echartsErr) {
+    return (
+      <div className="rounded-xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-900 dark:border-amber-700/50 dark:bg-amber-900/20 dark:text-amber-200">
+        地图加载失败：{echartsErr}
+      </div>
+    );
+  }
+
+  return (
+    <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
+      <header className="flex flex-wrap items-baseline justify-between gap-2">
+        <h2 className="text-lg font-semibold">区域概率地图</h2>
+        <span className="text-xs text-zinc-500">点的颜色 = 最可能 AQI 等级 · 点大小 = 该等级概率</span>
+      </header>
+
+      {days.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {days.map((d, i) => (
+            <button
+              key={d}
+              type="button"
+              onClick={() => setSelectedDayIdx(i)}
+              className={
+                "rounded-md border px-2.5 py-1 text-xs font-medium transition " +
+                (i === selectedDayIdx
+                  ? "border-zinc-900 bg-zinc-900 text-white dark:border-white dark:bg-white dark:text-zinc-900"
+                  : "border-zinc-200 bg-white text-zinc-700 hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-800 dark:text-zinc-200")
+              }
+            >
+              {shortDate(d)}
+              <span className="ml-1 text-[10px] opacity-70">{weekdayLabel(d)}</span>
+            </button>
+          ))}
+        </div>
+      )}
+
+      <div ref={containerRef} className="h-[500px] w-full" />
+
+      <Legend />
+    </section>
+  );
+}
+
+function Legend() {
+  return (
+    <div className="flex flex-wrap items-center gap-3 text-xs text-zinc-600 dark:text-zinc-400">
+      {AQI_CATEGORIES.map((cat) => (
+        <span key={cat} className="inline-flex items-center gap-1">
+          <span
+            className="inline-block h-3 w-3 rounded-full"
+            style={{ backgroundColor: CATEGORY_HEX[cat] }}
+          />
+          {cat}
+        </span>
+      ))}
+    </div>
+  );
+}

@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-22T13:40:06.352Z",
+  "generated_at": "2026-05-22T14:13:26.462Z",
   "evaluation_window_days": 14,
   "ground_truth_source": "open-meteo reanalysis (past_days)",
   "today": "2026-05-22",
@@ -35,6 +35,54 @@
         }
       ]
     },
+    "tianjin": {
+      "name": "天津",
+      "n_pairs": 0
+    },
+    "shijiazhuang": {
+      "name": "石家庄",
+      "n_pairs": 0
+    },
+    "tangshan": {
+      "name": "唐山",
+      "n_pairs": 0
+    },
+    "qinhuangdao": {
+      "name": "秦皇岛",
+      "n_pairs": 0
+    },
+    "handan": {
+      "name": "邯郸",
+      "n_pairs": 0
+    },
+    "xingtai": {
+      "name": "邢台",
+      "n_pairs": 0
+    },
+    "baoding": {
+      "name": "保定",
+      "n_pairs": 0
+    },
+    "zhangjiakou": {
+      "name": "张家口",
+      "n_pairs": 0
+    },
+    "chengde": {
+      "name": "承德",
+      "n_pairs": 0
+    },
+    "cangzhou": {
+      "name": "沧州",
+      "n_pairs": 0
+    },
+    "langfang": {
+      "name": "廊坊",
+      "n_pairs": 0
+    },
+    "hengshui": {
+      "name": "衡水",
+      "n_pairs": 0
+    },
     "shanghai": {
       "name": "上海",
       "n_pairs": 3,
@@ -60,6 +108,18 @@
           "accuracy": 0
         }
       ]
+    },
+    "nanjing": {
+      "name": "南京",
+      "n_pairs": 0
+    },
+    "suzhou": {
+      "name": "苏州",
+      "n_pairs": 0
+    },
+    "hangzhou": {
+      "name": "杭州",
+      "n_pairs": 0
     },
     "guangzhou": {
       "name": "广州",
@@ -113,6 +173,10 @@
         }
       ]
     },
+    "dongguan": {
+      "name": "东莞",
+      "n_pairs": 0
+    },
     "chengdu": {
       "name": "成都",
       "n_pairs": 3,
@@ -164,6 +228,10 @@
           "accuracy": 1
         }
       ]
+    },
+    "wuhan": {
+      "name": "武汉",
+      "n_pairs": 0
     }
   }
 }
