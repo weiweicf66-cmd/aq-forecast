@@ -32,6 +32,8 @@ n8n (Schedule + Code) → Open-Meteo fetch → 蒙特卡洛合成集合 (1000 sa
 - **AQI 分级**用中国 GB 3095-2012 六级，PM2.5 24h 均值断点（35/75/115/150/250）。
 - **数据 horizon 是 6 天而不是 7 天**：Open-Meteo 的 PM2.5 第 7 天通常全 null。UI 用 `days.length` 动态渲染。
 - **算法的版本权威源是 `scripts/generate-forecast.mjs`**；n8n/code-node.js 是它的镜像（手动同步）。
+- **n8n Code 节点沙箱限制**：不暴露 `fetch`，`require('https')` 被禁。HTTP 调用必须用 `this.helpers.httpRequest`。n8n/code-node.js 顶部已写好兼容层（探测过 `typeof this.helpers.httpRequest === "function"`）。
+- **n8n 本地编排环境强依赖代理**：用户网络拉 Docker Hub 不稳，最终是用 Clash TUN 模式接管 WSL2 流量才拉下 n8n 镜像。详情见 docs/n8n-setup.md。
 
 ## 关键文件
 - [lib/aqi.ts](lib/aqi.ts) — PM2.5 → AQI 等级映射（纯函数）
@@ -51,4 +53,6 @@ n8n (Schedule + Code) → Open-Meteo fetch → 蒙特卡洛合成集合 (1000 sa
 - [ ] **Open-Meteo 中国大陆访问稳定性**：偶发延迟/限流。n8n Code 节点目前没加重试，必要时加 3 次重试 + 30s 超时
 - [x] ~~首次推 GitHub~~（已完成）
 - [x] ~~Vercel 部署~~（已完成，URL 见上）
-- [ ] **n8n 工作流尚未配置**：用户需装 Docker → 按 docs/n8n-setup.md 导入 workflow.json + 粘贴 code-node.js + 设 GitHub PAT。配完才有每日自动更新。
+- [x] ~~n8n 工作流配置~~（已完成 2026-05-22，首条自动 commit 39009d3）
+- [ ] 用户需在 n8n 编辑器右上角把工作流切到 **Active**，每日 07:00 才会自动跑
+- [ ] 用户需轮换 GitHub PAT（之前的 token 在聊天里漏过），新 token 替换到 [n8n/code-node.local.js](n8n/code-node.local.js)
