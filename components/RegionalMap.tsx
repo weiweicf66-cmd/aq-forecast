@@ -61,13 +61,11 @@ export function RegionalMap({ data }: { data: ForecastDocument }) {
   const [echartsErr, setEchartsErr] = useState<string | null>(null);
   const [selectedDayIdx, setSelectedDayIdx] = useState(0);
 
-  // 找一个有数据的城市，按它的 days 做时间轴
   const days: string[] = useMemo(() => {
     const sample = Object.values(data.cities).find((c) => c.days.length > 0);
     return (sample?.days ?? []).map((d) => d.date);
   }, [data]);
 
-  // 初始化 echarts + 加载地图
   useEffect(() => {
     if (!containerRef.current) return;
     let cancelled = false;
@@ -77,11 +75,11 @@ export function RegionalMap({ data }: { data: ForecastDocument }) {
       try {
         const echarts = await loadEcharts();
         if (cancelled) return;
-        const geoRes = await fetch("/geo/china.json");
-        if (!geoRes.ok) throw new Error("加载中国地图失败");
+        const geoRes = await fetch("/geo/regions.json");
+        if (!geoRes.ok) throw new Error("加载行政区地图失败");
         const geoJson = await geoRes.json();
         if (cancelled) return;
-        echarts.registerMap("china", geoJson);
+        echarts.registerMap("china-regions", geoJson);
         if (!containerRef.current) return;
         chart = echarts.init(containerRef.current);
         chartRef.current = chart;
@@ -102,7 +100,6 @@ export function RegionalMap({ data }: { data: ForecastDocument }) {
     };
   }, []);
 
-  // 数据变化时更新 option
   useEffect(() => {
     const chart = chartRef.current;
     if (!chart || !echartsReady) return;
@@ -110,24 +107,26 @@ export function RegionalMap({ data }: { data: ForecastDocument }) {
     const dayIdx = Math.min(selectedDayIdx, days.length - 1);
     const targetDate = days[dayIdx];
 
-    type Point = {
-      name: string;
-      value: [number, number, number]; // [lon, lat, dominantProb]
-      itemStyle: { color: string };
+    type RegionDatum = {
+      name: string;          // feature.properties.name (用于匹配)
+      cityName: string;      // 展示用
       dayInfo: DailyDistribution;
+      itemStyle: { areaColor: string };
+      value: number;         // dominant 概率（驱动透明度可选）
     };
 
-    const points: Point[] = CITIES.flatMap((city) => {
+    const regionData: RegionDatum[] = CITIES.flatMap((city) => {
       const cf = data.cities[city.id];
       const day = cf?.days?.find((d) => d.date === targetDate);
       if (!day) return [];
       const dominantProb = day.categories[day.dominant] ?? 0;
       return [
         {
-          name: city.name,
-          value: [city.lon, city.lat, dominantProb],
-          itemStyle: { color: CATEGORY_HEX[day.dominant] },
+          name: city.featureName,
+          cityName: city.name,
           dayInfo: day,
+          itemStyle: { areaColor: CATEGORY_HEX[day.dominant] },
+          value: dominantProb,
         },
       ];
     });
@@ -136,53 +135,43 @@ export function RegionalMap({ data }: { data: ForecastDocument }) {
       backgroundColor: "transparent",
       tooltip: {
         trigger: "item",
-        formatter: (p: { data?: Point }) => {
-          const data = p.data;
-          if (!data?.dayInfo) return data?.name ?? "";
+        formatter: (p: { data?: RegionDatum; name?: string }) => {
+          const d = p.data;
+          if (!d?.dayInfo) {
+            return p.name ? `<div style="color:#888;">${p.name}<br/><span style="font-size:11px;">未监测</span></div>` : "";
+          }
           const cats = AQI_CATEGORIES.map(
             (c) =>
-              `<div style="display:flex;justify-content:space-between;gap:12px;font-size:11px;"><span>${c}</span><span>${((data.dayInfo.categories[c] ?? 0) * 100).toFixed(0)}%</span></div>`,
+              `<div style="display:flex;justify-content:space-between;gap:12px;font-size:11px;"><span>${c}</span><span>${((d.dayInfo.categories[c] ?? 0) * 100).toFixed(0)}%</span></div>`,
           ).join("");
           return `
-            <div style="font-weight:600;margin-bottom:4px;">${data.name}</div>
-            <div style="font-size:11px;color:#888;margin-bottom:6px;">最可能：${data.dayInfo.dominant} · PM2.5 ${data.dayInfo.pm25_p10}–${data.dayInfo.pm25_p90}</div>
+            <div style="font-weight:600;margin-bottom:4px;">${d.cityName}</div>
+            <div style="font-size:11px;color:#888;margin-bottom:6px;">最可能：${d.dayInfo.dominant} · PM2.5 ${d.dayInfo.pm25_p10}–${d.dayInfo.pm25_p90}</div>
             ${cats}
           `;
         },
       },
-      geo: {
-        map: "china",
-        roam: true,
-        zoom: 1.2,
-        center: [110, 36],
-        scaleLimit: { min: 0.8, max: 6 },
-        itemStyle: {
-          areaColor: "#f4f4f5",
-          borderColor: "#d4d4d8",
-        },
-        emphasis: {
-          itemStyle: { areaColor: "#e4e4e7" },
-          label: { show: false },
-        },
-        label: { show: false },
-      },
       series: [
         {
-          type: "scatter",
-          coordinateSystem: "geo",
-          data: points,
-          symbolSize: (val: number[]) => 10 + (val[2] ?? 0) * 24, // 概率越高，点越大
-          label: {
-            show: true,
-            formatter: (p: { data?: Point }) => p.data?.name ?? "",
-            position: "right",
-            fontSize: 10,
-            color: "#52525b",
+          name: "AQI",
+          type: "map",
+          map: "china-regions",
+          roam: true,
+          zoom: 1.2,
+          center: [110, 36],
+          scaleLimit: { min: 0.8, max: 6 },
+          itemStyle: {
+            areaColor: "#f4f4f5",
+            borderColor: "#d4d4d8",
+            borderWidth: 0.5,
           },
           emphasis: {
+            itemStyle: { areaColor: undefined, borderColor: "#18181b", borderWidth: 1.5 },
             label: { show: true, fontWeight: 600, color: "#18181b" },
-            scale: 1.3,
           },
+          select: { disabled: true },
+          label: { show: false },
+          data: regionData,
         },
       ],
     });
@@ -200,7 +189,7 @@ export function RegionalMap({ data }: { data: ForecastDocument }) {
     <section className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-white p-4 shadow-sm dark:border-zinc-800 dark:bg-zinc-900">
       <header className="flex flex-wrap items-baseline justify-between gap-2">
         <h2 className="text-lg font-semibold">区域概率地图</h2>
-        <span className="text-xs text-zinc-500">点的颜色 = 最可能 AQI 等级 · 点大小 = 该等级概率</span>
+        <span className="text-xs text-zinc-500">行政区颜色 = 该城市最可能 AQI 等级 · 灰色 = 未监测 · 悬停看详情</span>
       </header>
 
       {days.length > 0 && (
@@ -224,7 +213,7 @@ export function RegionalMap({ data }: { data: ForecastDocument }) {
         </div>
       )}
 
-      <div ref={containerRef} className="h-[500px] w-full" />
+      <div ref={containerRef} className="h-[560px] w-full" />
 
       <Legend />
     </section>
@@ -237,7 +226,7 @@ function Legend() {
       {AQI_CATEGORIES.map((cat) => (
         <span key={cat} className="inline-flex items-center gap-1">
           <span
-            className="inline-block h-3 w-3 rounded-full"
+            className="inline-block h-3 w-3 rounded-sm"
             style={{ backgroundColor: CATEGORY_HEX[cat] }}
           />
           {cat}

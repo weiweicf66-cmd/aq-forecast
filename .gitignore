@@ -44,3 +44,6 @@ next-env.d.ts
 # n8n local code with embedded PAT (never commit)
 *.local.js
 *.local.json
+
+# geo cache (本地下载缓存，不需要 commit；regions.json 是合并产物，要 commit)
+public/geo/_cache/
