@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# n8n local code with embedded PAT (never commit)
+*.local.js
+*.local.json

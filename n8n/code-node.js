@@ -8,6 +8,35 @@
 //   GITHUB_BRANCH = "main"
 // n8n 用 $env 读取系统环境变量；用 $vars 读取 workflow variables（在 Settings 里设）。
 
+// n8n Code 节点沙箱：用 this.helpers.httpRequest 实现 fetch 兼容层
+const helpers = this.helpers;
+
+async function fetch(url, options = {}) {
+  const res = await helpers.httpRequest({
+    url,
+    method: options.method || "GET",
+    headers: options.headers || {},
+    body: options.body,
+    returnFullResponse: true,
+    ignoreHttpStatusErrors: true,
+  });
+  const bodyStr =
+    typeof res.body === "string"
+      ? res.body
+      : res.body == null
+        ? ""
+        : JSON.stringify(res.body);
+  return {
+    ok: res.statusCode >= 200 && res.statusCode < 300,
+    status: res.statusCode,
+    text: async () => bodyStr,
+    json: async () =>
+      typeof res.body === "object" && res.body !== null
+        ? res.body
+        : JSON.parse(bodyStr),
+  };
+}
+
 const CITIES = [
   { id: "beijing",   name: "北京", lat: 39.9042, lon: 116.4074 },
   { id: "shanghai",  name: "上海", lat: 31.2304, lon: 121.4737 },
