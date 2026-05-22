@@ -1,8 +1,7 @@
 // n8n Code 节点：每日评估 forecasts 与 Open-Meteo reanalysis 的吻合度。
-// 拷贝到 n8n 第二个工作流的 Code 节点 (mode: "Run Once for All Items", language: JavaScript)。
 //
-// 前置：与 forecast 工作流同样的 PAT。本文件留占位 $vars.GITHUB_TOKEN；
-// 真正能跑的版本在 eval-code-node.local.js（gitignored）。
+// 本文件是模板：含 n8n 变量占位（参考 .env.example），无密钥，可 commit。
+// 实际粘贴到 n8n 的版本是 eval-code-node.local.js（gitignored，由 npm run build:n8n 生成）。
 
 const helpers = this.helpers;
 

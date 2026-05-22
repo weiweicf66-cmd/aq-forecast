@@ -1,12 +1,7 @@
-// 这个文件是 n8n Code 节点的代码源（也作为 PR review 用的版本控制副本）。
-// 拷贝整段到 n8n 的 "Code" 节点 (mode: "Run Once for All Items", language: JavaScript)。
+// n8n Code 节点：每日拉 Open-Meteo + 蒙特卡洛概率化 + 提交 forecast.json 到 GitHub。
 //
-// 前置：在工作流变量里设置：
-//   GITHUB_TOKEN  = fine-grained PAT (Contents: read/write, 仅 aq-forecast 仓库)
-//   GITHUB_OWNER  = "weiweicf66-cmd"
-//   GITHUB_REPO   = "aq-forecast"
-//   GITHUB_BRANCH = "main"
-// n8n 用 $env 读取系统环境变量；用 $vars 读取 workflow variables（在 Settings 里设）。
+// 本文件是模板：含 n8n 变量占位（参考 .env.example），无密钥，可 commit。
+// 实际粘贴到 n8n 的版本是 code-node.local.js（gitignored，由 npm run build:n8n 生成）。
 
 // n8n Code 节点沙箱：用 this.helpers.httpRequest 实现 fetch 兼容层
 const helpers = this.helpers;
