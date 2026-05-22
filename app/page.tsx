@@ -1,21 +1,23 @@
 import fs from "node:fs/promises";
 import path from "node:path";
-import type { ForecastDocument } from "@/lib/types";
+import type { ForecastDocument, EvalDocument } from "@/lib/types";
 import { Dashboard } from "@/components/Dashboard";
 import { DataFreshness } from "@/components/DataFreshness";
+import { EvalSummary } from "@/components/EvalSummary";
 
-async function loadForecast(): Promise<ForecastDocument | null> {
+async function loadJson<T>(file: string): Promise<T | null> {
   try {
-    const p = path.join(process.cwd(), "public", "data", "forecast.json");
+    const p = path.join(process.cwd(), "public", "data", file);
     const raw = await fs.readFile(p, "utf8");
-    return JSON.parse(raw);
+    return JSON.parse(raw) as T;
   } catch {
     return null;
   }
 }
 
 export default async function Page() {
-  const data = await loadForecast();
+  const data = await loadJson<ForecastDocument>("forecast.json");
+  const evalData = await loadJson<EvalDocument>("eval.json");
 
   return (
     <main className="mx-auto flex w-full max-w-5xl flex-1 flex-col gap-6 px-4 py-8 sm:px-6 sm:py-10">
@@ -30,6 +32,7 @@ export default async function Page() {
       {data ? (
         <>
           <Dashboard data={data} />
+          {evalData && <EvalSummary data={evalData} />}
           <footer className="mt-4 border-t border-zinc-200 pt-4 dark:border-zinc-800">
             <DataFreshness generatedAt={data.generated_at} methodVersion={data.method_version} />
           </footer>

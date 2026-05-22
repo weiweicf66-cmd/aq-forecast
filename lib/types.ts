@@ -20,3 +20,31 @@ export type ForecastDocument = {
   horizon_days: number;
   cities: Record<string, CityForecast>;
 };
+
+export type LeadDayMetric = {
+  lead_day: number;
+  n: number;
+  brier: number;
+  accuracy: number;
+};
+
+export type CityEvalMetric = {
+  name: string;
+  n_pairs: number;
+  brier_score?: number;
+  categorical_accuracy?: number;
+  by_lead_day?: LeadDayMetric[];
+};
+
+export type EvalDocument = {
+  generated_at: string;
+  evaluation_window_days: number;
+  ground_truth_source: string;
+  today: string;
+  overall: {
+    n_pairs: number;
+    brier_score: number | null;
+    categorical_accuracy: number | null;
+  };
+  city_metrics: Record<string, CityEvalMetric>;
+};

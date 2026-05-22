@@ -1,0 +1,169 @@
+{
+  "generated_at": "2026-05-22T13:18:04.235Z",
+  "evaluation_window_days": 14,
+  "ground_truth_source": "open-meteo reanalysis (past_days)",
+  "today": "2026-05-22",
+  "overall": {
+    "n_pairs": 18,
+    "brier_score": 0.196,
+    "categorical_accuracy": 0.889
+  },
+  "city_metrics": {
+    "beijing": {
+      "name": "北京",
+      "n_pairs": 3,
+      "brier_score": 0.146,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 1,
+          "brier": 0.078,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.333,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 2,
+          "n": 1,
+          "brier": 0.027,
+          "accuracy": 1
+        }
+      ]
+    },
+    "shanghai": {
+      "name": "上海",
+      "n_pairs": 3,
+      "brier_score": 0.586,
+      "categorical_accuracy": 0.333,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 1,
+          "brier": 0.012,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.754,
+          "accuracy": 0
+        },
+        {
+          "lead_day": 2,
+          "n": 1,
+          "brier": 0.991,
+          "accuracy": 0
+        }
+      ]
+    },
+    "guangzhou": {
+      "name": "广州",
+      "n_pairs": 3,
+      "brier_score": 0.037,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 1,
+          "brier": 0.051,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.026,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 2,
+          "n": 1,
+          "brier": 0.035,
+          "accuracy": 1
+        }
+      ]
+    },
+    "shenzhen": {
+      "name": "深圳",
+      "n_pairs": 3,
+      "brier_score": 0,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 1,
+          "brier": 0,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 2,
+          "n": 1,
+          "brier": 0,
+          "accuracy": 1
+        }
+      ]
+    },
+    "chengdu": {
+      "name": "成都",
+      "n_pairs": 3,
+      "brier_score": 0.245,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 1,
+          "brier": 0.492,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.198,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 2,
+          "n": 1,
+          "brier": 0.044,
+          "accuracy": 1
+        }
+      ]
+    },
+    "xian": {
+      "name": "西安",
+      "n_pairs": 3,
+      "brier_score": 0.162,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 1,
+          "brier": 0.193,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.052,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 2,
+          "n": 1,
+          "brier": 0.241,
+          "accuracy": 1
+        }
+      ]
+    }
+  }
+}

@@ -12,16 +12,23 @@
 
 ## 数据流
 ```
-n8n (Schedule + Code) → Open-Meteo fetch → 蒙特卡洛合成集合 (1000 samples)
-  → public/data/forecast.json (PUT via GitHub Contents API)
-  → Vercel webhook 自动 next build
+工作流 1 (07:00 daily):
+  n8n → Open-Meteo → 蒙特卡洛合成集合 (1000 samples)
+   → public/data/forecast.json (PUT via GitHub Contents API)
+   → Vercel webhook 自动 next build
+
+工作流 2 (07:30 daily):
+  n8n → GitHub commits API (取过去 14 天 forecast.json 历史) + Open-Meteo past_days (实测)
+   → Brier score + 分类准确率
+   → public/data/eval.json → Vercel
 ```
 
-前端纯静态读 `public/data/forecast.json`，无 API Route、无运行时依赖。
+前端纯静态读 `public/data/forecast.json` 和 `public/data/eval.json`，无 API Route、无运行时依赖。
 
 ## 本地开发
 - `npm run dev` → http://localhost:3000
 - `node scripts/generate-forecast.mjs` 不经 n8n 重新生成数据（与 n8n 共享同一份算法）
+- `GITHUB_TOKEN=... node scripts/evaluate-forecasts.mjs` 跑评估（GITHUB_TOKEN 可选；public repo 无 token 也行但 60/h 限速）
 - n8n 启动：`docker start n8n` 后访问 http://localhost:5678
 
 ## 重要决策记录
@@ -37,11 +44,14 @@ n8n (Schedule + Code) → Open-Meteo fetch → 蒙特卡洛合成集合 (1000 sa
 
 ## 关键文件
 - [lib/aqi.ts](lib/aqi.ts) — PM2.5 → AQI 等级映射（纯函数）
-- [scripts/generate-forecast.mjs](scripts/generate-forecast.mjs) — 本地一次性生成（无 n8n 也能用）
-- [n8n/code-node.js](n8n/code-node.js) — n8n Code 节点完整源码（注意保持与上面同步）
-- [n8n/workflow.json](n8n/workflow.json) — n8n 工作流骨架（Code 节点 jsCode 需手动粘贴）
+- [scripts/generate-forecast.mjs](scripts/generate-forecast.mjs) — 本地生成 forecast.json
+- [scripts/evaluate-forecasts.mjs](scripts/evaluate-forecasts.mjs) — 本地生成 eval.json
+- [n8n/code-node.js](n8n/code-node.js) — n8n 工作流 1 Code 节点（保持与 scripts/generate-forecast.mjs 同步）
+- [n8n/eval-code-node.js](n8n/eval-code-node.js) — n8n 工作流 2 Code 节点（保持与 scripts/evaluate-forecasts.mjs 同步）
+- [n8n/workflow.json](n8n/workflow.json), [n8n/eval-workflow.json](n8n/eval-workflow.json) — 工作流骨架
 - [components/Dashboard.tsx](components/Dashboard.tsx) — 主交互（城市切换 + 渲染）
-- [public/data/forecast.json](public/data/forecast.json) — n8n 产出物，前端唯一数据源
+- [components/EvalSummary.tsx](components/EvalSummary.tsx) — 评估区
+- [public/data/forecast.json](public/data/forecast.json), [public/data/eval.json](public/data/eval.json) — 产出物
 
 ## 用户偏好
 - UI 是中文消费者向，避免统计学行话。例如 P10/P50/P90 改为「区间 X–Y，最可能 Z」并加 hover tooltip。
@@ -54,5 +64,9 @@ n8n (Schedule + Code) → Open-Meteo fetch → 蒙特卡洛合成集合 (1000 sa
 - [x] ~~首次推 GitHub~~（已完成）
 - [x] ~~Vercel 部署~~（已完成，URL 见上）
 - [x] ~~n8n 工作流配置~~（已完成 2026-05-22，首条自动 commit 39009d3）
-- [ ] 用户需在 n8n 编辑器右上角把工作流切到 **Active**，每日 07:00 才会自动跑
-- [ ] 用户需轮换 GitHub PAT（之前的 token 在聊天里漏过），新 token 替换到 [n8n/code-node.local.js](n8n/code-node.local.js)
+- [x] ~~评估管线~~（forecast 工作流 + 评估工作流均已建好；首次评估 18 对 Brier=0.196 Acc=0.889）
+- [ ] 用户需在 n8n 编辑器右上角把**两个**工作流都切到 **Active**：
+   - `AQ Forecast Daily` (07:00)
+   - `AQ Forecast Eval Daily` (07:30) — 需先按 docs/eval-methodology.md 导入 n8n/eval-workflow.json 并粘贴 eval-code-node.local.js
+- [ ] 用户需轮换 GitHub PAT，新 token 同时替换到 [n8n/code-node.local.js](n8n/code-node.local.js) 和 [n8n/eval-code-node.local.js](n8n/eval-code-node.local.js)
+- [ ] [Phase 2] 加 ECharts 中国地图视图（京津冀/长三角 区域可视化），扩城市到 ~30 个
