@@ -16,6 +16,9 @@ const outFile = path.join(root, "public", "geo", "regions.json");
 // 想要替换为地级市粒度的省（adcode → 省 GeoJSON 路径）
 const PREFECTURE_PROVINCES = {
   130000: "河北省",
+  140000: "山西省",
+  370000: "山东省",
+  410000: "河南省",
   320000: "江苏省",
   330000: "浙江省",
   440000: "广东省",

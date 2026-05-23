@@ -6,8 +6,10 @@ import { CITIES } from "@/lib/cities";
 import { CATEGORY_HEX } from "@/lib/colors";
 import { AQI_CATEGORIES } from "@/lib/aqi";
 
-// ECharts 走 CDN 运行时加载（避免 npm install echarts 在用户网络上不稳定）
-const ECHARTS_CDN = "https://cdn.jsdelivr.net/npm/echarts@5.5.1/dist/echarts.min.js";
+// ECharts 自托管（public/vendor/echarts.min.js）。
+// 不依赖外部 CDN，跟 forecast.json 走同一条 Vercel 链路，国内访问稳定。
+// 更新 echarts 版本：替换 public/vendor/echarts.min.js 即可。
+const ECHARTS_URL = "/vendor/echarts.min.js";
 
 type EChartsInstance = {
   setOption: (opt: unknown) => void;
@@ -23,7 +25,7 @@ function loadEcharts(): Promise<EChartsGlobal> {
   const w = window as unknown as { echarts?: EChartsGlobal };
   if (w.echarts) return Promise.resolve(w.echarts);
   return new Promise((resolve, reject) => {
-    const existing = document.querySelector<HTMLScriptElement>(`script[src="${ECHARTS_CDN}"]`);
+    const existing = document.querySelector<HTMLScriptElement>(`script[src="${ECHARTS_URL}"]`);
     if (existing) {
       existing.addEventListener("load", () =>
         w.echarts ? resolve(w.echarts) : reject(new Error("ECharts CDN 加载后未挂到 window")),
@@ -32,10 +34,10 @@ function loadEcharts(): Promise<EChartsGlobal> {
       return;
     }
     const s = document.createElement("script");
-    s.src = ECHARTS_CDN;
+    s.src = ECHARTS_URL;
     s.async = true;
     s.onload = () => (w.echarts ? resolve(w.echarts) : reject(new Error("ECharts CDN 加载后未挂到 window")));
-    s.onerror = () => reject(new Error("ECharts CDN 加载失败（jsDelivr 不通？）"));
+    s.onerror = () => reject(new Error("ECharts 加载失败（vendor 文件未部署？）"));
     document.head.appendChild(s);
   });
 }
