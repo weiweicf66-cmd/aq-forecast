@@ -38,6 +38,7 @@
 - `n8n/*.local.js`（gitignore）由 `npm run build:n8n` 自动生成，含真实 token，粘到 n8n
 - **轮换 token**：改 `.env.local` → `npm run build:n8n` → 重新粘贴到 n8n
 - **改算法**：改 `n8n/*.js` → `npm run build:n8n` → 重新粘贴到 n8n
+- **改城市列表**：改 `lib/cities.json`（49 城唯一源）→ `npm run build:n8n` → 重新粘贴到 n8n。前端、本地脚本、n8n Code 节点都从这一份消费。
 
 ## 重要决策记录
 
