@@ -1,25 +1,25 @@
 {
-  "generated_at": "2026-05-23T03:23:26.967Z",
+  "generated_at": "2026-05-24T02:30:44.505Z",
   "evaluation_window_days": 14,
   "ground_truth_source": "open-meteo reanalysis (past_days)",
-  "today": "2026-05-23",
+  "today": "2026-05-24",
   "overall": {
-    "n_pairs": 59,
-    "brier_score": 0.199,
-    "categorical_accuracy": 0.847
+    "n_pairs": 238,
+    "brier_score": 0.218,
+    "categorical_accuracy": 0.84
   },
   "by_lead_day_overall": [
     {
       "lead_day": 0,
-      "n": 41,
-      "brier": 0.167,
-      "accuracy": 0.854
+      "n": 179,
+      "brier": 0.182,
+      "accuracy": 0.849
     },
     {
       "lead_day": 1,
-      "n": 6,
-      "brier": 0.227,
-      "accuracy": 0.833
+      "n": 41,
+      "brier": 0.347,
+      "accuracy": 0.805
     },
     {
       "lead_day": 2,
@@ -32,25 +32,31 @@
       "n": 6,
       "brier": 0.359,
       "accuracy": 0.833
+    },
+    {
+      "lead_day": 4,
+      "n": 6,
+      "brier": 0.236,
+      "accuracy": 0.833
     }
   ],
   "city_metrics": {
     "beijing": {
       "name": "北京",
-      "n_pairs": 7,
-      "brier_score": 0.077,
+      "n_pairs": 13,
+      "brier_score": 0.187,
       "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
-          "n": 4,
-          "brier": 0.025,
+          "n": 6,
+          "brier": 0.16,
           "accuracy": 1
         },
         {
           "lead_day": 1,
-          "n": 1,
-          "brier": 0.333,
+          "n": 4,
+          "brier": 0.312,
           "accuracy": 1
         },
         {
@@ -64,232 +70,450 @@
           "n": 1,
           "brier": 0.079,
           "accuracy": 1
+        },
+        {
+          "lead_day": 4,
+          "n": 1,
+          "brier": 0.119,
+          "accuracy": 1
         }
       ]
     },
     "tianjin": {
       "name": "天津",
-      "n_pairs": 1,
-      "brier_score": 0.14,
+      "n_pairs": 4,
+      "brier_score": 0.048,
       "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
-          "n": 1,
-          "brier": 0.14,
+          "n": 3,
+          "brier": 0.055,
           "accuracy": 1
-        }
-      ]
-    },
-    "shijiazhuang": {
-      "name": "石家庄",
-      "n_pairs": 1,
-      "brier_score": 0.03,
-      "categorical_accuracy": 1,
-      "by_lead_day": [
+        },
         {
-          "lead_day": 0,
-          "n": 1,
-          "brier": 0.03,
-          "accuracy": 1
-        }
-      ]
-    },
-    "tangshan": {
-      "name": "唐山",
-      "n_pairs": 1,
-      "brier_score": 0.026,
-      "categorical_accuracy": 1,
-      "by_lead_day": [
-        {
-          "lead_day": 0,
-          "n": 1,
-          "brier": 0.026,
-          "accuracy": 1
-        }
-      ]
-    },
-    "qinhuangdao": {
-      "name": "秦皇岛",
-      "n_pairs": 1,
-      "brier_score": 0.023,
-      "categorical_accuracy": 1,
-      "by_lead_day": [
-        {
-          "lead_day": 0,
-          "n": 1,
-          "brier": 0.023,
-          "accuracy": 1
-        }
-      ]
-    },
-    "handan": {
-      "name": "邯郸",
-      "n_pairs": 1,
-      "brier_score": 0.227,
-      "categorical_accuracy": 1,
-      "by_lead_day": [
-        {
-          "lead_day": 0,
-          "n": 1,
-          "brier": 0.227,
-          "accuracy": 1
-        }
-      ]
-    },
-    "xingtai": {
-      "name": "邢台",
-      "n_pairs": 1,
-      "brier_score": 0.01,
-      "categorical_accuracy": 1,
-      "by_lead_day": [
-        {
-          "lead_day": 0,
-          "n": 1,
-          "brier": 0.01,
-          "accuracy": 1
-        }
-      ]
-    },
-    "baoding": {
-      "name": "保定",
-      "n_pairs": 1,
-      "brier_score": 0.207,
-      "categorical_accuracy": 1,
-      "by_lead_day": [
-        {
-          "lead_day": 0,
-          "n": 1,
-          "brier": 0.207,
-          "accuracy": 1
-        }
-      ]
-    },
-    "zhangjiakou": {
-      "name": "张家口",
-      "n_pairs": 1,
-      "brier_score": 0.011,
-      "categorical_accuracy": 1,
-      "by_lead_day": [
-        {
-          "lead_day": 0,
-          "n": 1,
-          "brier": 0.011,
-          "accuracy": 1
-        }
-      ]
-    },
-    "chengde": {
-      "name": "承德",
-      "n_pairs": 1,
-      "brier_score": 0.029,
-      "categorical_accuracy": 1,
-      "by_lead_day": [
-        {
-          "lead_day": 0,
+          "lead_day": 1,
           "n": 1,
           "brier": 0.029,
           "accuracy": 1
         }
       ]
     },
-    "cangzhou": {
-      "name": "沧州",
-      "n_pairs": 1,
-      "brier_score": 0.31,
+    "shijiazhuang": {
+      "name": "石家庄",
+      "n_pairs": 4,
+      "brier_score": 0.023,
       "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
-          "n": 1,
-          "brier": 0.31,
+          "n": 3,
+          "brier": 0.016,
           "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.043,
+          "accuracy": 1
+        }
+      ]
+    },
+    "tangshan": {
+      "name": "唐山",
+      "n_pairs": 4,
+      "brier_score": 0.164,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.06,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.478,
+          "accuracy": 1
+        }
+      ]
+    },
+    "qinhuangdao": {
+      "name": "秦皇岛",
+      "n_pairs": 4,
+      "brier_score": 0.252,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.246,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.268,
+          "accuracy": 1
+        }
+      ]
+    },
+    "handan": {
+      "name": "邯郸",
+      "n_pairs": 4,
+      "brier_score": 0.068,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.081,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.029,
+          "accuracy": 1
+        }
+      ]
+    },
+    "xingtai": {
+      "name": "邢台",
+      "n_pairs": 5,
+      "brier_score": 0.092,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 4,
+          "brier": 0.049,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.261,
+          "accuracy": 1
+        }
+      ]
+    },
+    "baoding": {
+      "name": "保定",
+      "n_pairs": 5,
+      "brier_score": 0.864,
+      "categorical_accuracy": 0.2,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 4,
+          "brier": 0.691,
+          "accuracy": 0.25
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 1.556,
+          "accuracy": 0
+        }
+      ]
+    },
+    "zhangjiakou": {
+      "name": "张家口",
+      "n_pairs": 5,
+      "brier_score": 0.453,
+      "categorical_accuracy": 0.8,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 4,
+          "brier": 0.28,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 1.146,
+          "accuracy": 0
+        }
+      ]
+    },
+    "chengde": {
+      "name": "承德",
+      "n_pairs": 5,
+      "brier_score": 0.195,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 4,
+          "brier": 0.132,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.446,
+          "accuracy": 1
+        }
+      ]
+    },
+    "cangzhou": {
+      "name": "沧州",
+      "n_pairs": 5,
+      "brier_score": 0.498,
+      "categorical_accuracy": 0.8,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 4,
+          "brier": 0.379,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
+          "n": 1,
+          "brier": 0.977,
+          "accuracy": 0
         }
       ]
     },
     "langfang": {
       "name": "廊坊",
-      "n_pairs": 1,
-      "brier_score": 0.192,
-      "categorical_accuracy": 1,
+      "n_pairs": 5,
+      "brier_score": 0.643,
+      "categorical_accuracy": 0.2,
       "by_lead_day": [
         {
           "lead_day": 0,
+          "n": 4,
+          "brier": 0.603,
+          "accuracy": 0.25
+        },
+        {
+          "lead_day": 1,
           "n": 1,
-          "brier": 0.192,
-          "accuracy": 1
+          "brier": 0.804,
+          "accuracy": 0
         }
       ]
     },
     "hengshui": {
       "name": "衡水",
-      "n_pairs": 1,
-      "brier_score": 0.093,
-      "categorical_accuracy": 1,
+      "n_pairs": 5,
+      "brier_score": 0.656,
+      "categorical_accuracy": 0.2,
       "by_lead_day": [
         {
           "lead_day": 0,
+          "n": 4,
+          "brier": 0.48,
+          "accuracy": 0.25
+        },
+        {
+          "lead_day": 1,
           "n": 1,
-          "brier": 0.093,
-          "accuracy": 1
+          "brier": 1.358,
+          "accuracy": 0
         }
       ]
     },
     "taiyuan": {
       "name": "太原",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.02,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.02,
+          "accuracy": 1
+        }
+      ]
     },
     "datong": {
       "name": "大同",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.01,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.01,
+          "accuracy": 1
+        }
+      ]
     },
     "yangquan": {
       "name": "阳泉",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.094,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.094,
+          "accuracy": 1
+        }
+      ]
     },
     "changzhi": {
       "name": "长治",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.664,
+      "categorical_accuracy": 0,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.664,
+          "accuracy": 0
+        }
+      ]
     },
     "jincheng": {
       "name": "晋城",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.007,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.007,
+          "accuracy": 1
+        }
+      ]
     },
     "shuozhou": {
       "name": "朔州",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0,
+          "accuracy": 1
+        }
+      ]
     },
     "jinzhong": {
       "name": "晋中",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.005,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.005,
+          "accuracy": 1
+        }
+      ]
     },
     "yuncheng": {
       "name": "运城",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.161,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.161,
+          "accuracy": 1
+        }
+      ]
     },
     "xinzhou": {
       "name": "忻州",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.035,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.035,
+          "accuracy": 1
+        }
+      ]
     },
     "linfen": {
       "name": "临汾",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.094,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.094,
+          "accuracy": 1
+        }
+      ]
     },
     "lvliang": {
       "name": "吕梁",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0,
+          "accuracy": 1
+        }
+      ]
     },
     "jinan": {
       "name": "济南",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.014,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.014,
+          "accuracy": 1
+        }
+      ]
     },
     "zibo": {
       "name": "淄博",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.035,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.035,
+          "accuracy": 1
+        }
+      ]
     },
     "zaozhuang": {
       "name": "枣庄",
-      "n_pairs": 0
+      "n_pairs": 3,
+      "brier_score": 0.553,
+      "categorical_accuracy": 0,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.553,
+          "accuracy": 0
+        }
+      ]
     },
     "jining": {
       "name": "济宁",
@@ -297,65 +521,175 @@
     },
     "taian": {
       "name": "泰安",
-      "n_pairs": 0
-    },
-    "liaocheng": {
-      "name": "聊城",
-      "n_pairs": 0
-    },
-    "dezhou": {
-      "name": "德州",
-      "n_pairs": 0
-    },
-    "binzhou": {
-      "name": "滨州",
-      "n_pairs": 0
-    },
-    "zhengzhou": {
-      "name": "郑州",
-      "n_pairs": 0
-    },
-    "kaifeng": {
-      "name": "开封",
-      "n_pairs": 0
-    },
-    "anyang": {
-      "name": "安阳",
-      "n_pairs": 0
-    },
-    "hebi": {
-      "name": "鹤壁",
-      "n_pairs": 0
-    },
-    "xinxiang": {
-      "name": "新乡",
-      "n_pairs": 0
-    },
-    "jiaozuo": {
-      "name": "焦作",
-      "n_pairs": 0
-    },
-    "puyang": {
-      "name": "濮阳",
-      "n_pairs": 0
-    },
-    "shanghai": {
-      "name": "上海",
-      "n_pairs": 7,
-      "brier_score": 0.262,
-      "categorical_accuracy": 0.714,
+      "n_pairs": 3,
+      "brier_score": 0.042,
+      "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
-          "n": 4,
-          "brier": 0.013,
+          "n": 3,
+          "brier": 0.042,
+          "accuracy": 1
+        }
+      ]
+    },
+    "liaocheng": {
+      "name": "聊城",
+      "n_pairs": 3,
+      "brier_score": 0.005,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.005,
+          "accuracy": 1
+        }
+      ]
+    },
+    "dezhou": {
+      "name": "德州",
+      "n_pairs": 3,
+      "brier_score": 0.044,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.044,
+          "accuracy": 1
+        }
+      ]
+    },
+    "binzhou": {
+      "name": "滨州",
+      "n_pairs": 3,
+      "brier_score": 0.01,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.01,
+          "accuracy": 1
+        }
+      ]
+    },
+    "zhengzhou": {
+      "name": "郑州",
+      "n_pairs": 3,
+      "brier_score": 0.189,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.189,
+          "accuracy": 1
+        }
+      ]
+    },
+    "kaifeng": {
+      "name": "开封",
+      "n_pairs": 3,
+      "brier_score": 0.017,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.017,
+          "accuracy": 1
+        }
+      ]
+    },
+    "anyang": {
+      "name": "安阳",
+      "n_pairs": 3,
+      "brier_score": 0.023,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.023,
+          "accuracy": 1
+        }
+      ]
+    },
+    "hebi": {
+      "name": "鹤壁",
+      "n_pairs": 3,
+      "brier_score": 0.01,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.01,
+          "accuracy": 1
+        }
+      ]
+    },
+    "xinxiang": {
+      "name": "新乡",
+      "n_pairs": 3,
+      "brier_score": 0.014,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.014,
+          "accuracy": 1
+        }
+      ]
+    },
+    "jiaozuo": {
+      "name": "焦作",
+      "n_pairs": 3,
+      "brier_score": 0.135,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.135,
+          "accuracy": 1
+        }
+      ]
+    },
+    "puyang": {
+      "name": "濮阳",
+      "n_pairs": 3,
+      "brier_score": 0.006,
+      "categorical_accuracy": 1,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 3,
+          "brier": 0.006,
+          "accuracy": 1
+        }
+      ]
+    },
+    "shanghai": {
+      "name": "上海",
+      "n_pairs": 14,
+      "brier_score": 0.271,
+      "categorical_accuracy": 0.857,
+      "by_lead_day": [
+        {
+          "lead_day": 0,
+          "n": 7,
+          "brier": 0.151,
           "accuracy": 1
         },
         {
           "lead_day": 1,
-          "n": 1,
-          "brier": 0.754,
-          "accuracy": 0
+          "n": 4,
+          "brier": 0.426,
+          "accuracy": 0.75
         },
         {
           "lead_day": 2,
@@ -368,67 +702,91 @@
           "n": 1,
           "brier": 0.035,
           "accuracy": 1
+        },
+        {
+          "lead_day": 4,
+          "n": 1,
+          "brier": 0,
+          "accuracy": 1
         }
       ]
     },
     "nanjing": {
       "name": "南京",
-      "n_pairs": 1,
-      "brier_score": 0.328,
-      "categorical_accuracy": 1,
+      "n_pairs": 5,
+      "brier_score": 0.647,
+      "categorical_accuracy": 0.2,
       "by_lead_day": [
         {
           "lead_day": 0,
+          "n": 4,
+          "brier": 0.627,
+          "accuracy": 0.25
+        },
+        {
+          "lead_day": 1,
           "n": 1,
-          "brier": 0.328,
-          "accuracy": 1
+          "brier": 0.727,
+          "accuracy": 0
         }
       ]
     },
     "suzhou": {
       "name": "苏州",
-      "n_pairs": 1,
-      "brier_score": 0.043,
-      "categorical_accuracy": 1,
+      "n_pairs": 5,
+      "brier_score": 1.022,
+      "categorical_accuracy": 0.2,
       "by_lead_day": [
         {
           "lead_day": 0,
+          "n": 4,
+          "brier": 0.87,
+          "accuracy": 0.25
+        },
+        {
+          "lead_day": 1,
           "n": 1,
-          "brier": 0.043,
-          "accuracy": 1
+          "brier": 1.627,
+          "accuracy": 0
         }
       ]
     },
     "hangzhou": {
       "name": "杭州",
-      "n_pairs": 1,
-      "brier_score": 0.056,
+      "n_pairs": 5,
+      "brier_score": 0.209,
       "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
+          "n": 4,
+          "brier": 0.141,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
           "n": 1,
-          "brier": 0.056,
+          "brier": 0.48,
           "accuracy": 1
         }
       ]
     },
     "guangzhou": {
       "name": "广州",
-      "n_pairs": 7,
-      "brier_score": 0.045,
+      "n_pairs": 14,
+      "brier_score": 0.029,
       "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
-          "n": 4,
-          "brier": 0.059,
+          "n": 7,
+          "brier": 0.042,
           "accuracy": 1
         },
         {
           "lead_day": 1,
-          "n": 1,
-          "brier": 0.026,
+          "n": 4,
+          "brier": 0.015,
           "accuracy": 1
         },
         {
@@ -442,24 +800,30 @@
           "n": 1,
           "brier": 0.022,
           "accuracy": 1
+        },
+        {
+          "lead_day": 4,
+          "n": 1,
+          "brier": 0.002,
+          "accuracy": 1
         }
       ]
     },
     "shenzhen": {
       "name": "深圳",
-      "n_pairs": 7,
-      "brier_score": 0.001,
+      "n_pairs": 14,
+      "brier_score": 0,
       "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
-          "n": 4,
+          "n": 7,
           "brier": 0.001,
           "accuracy": 1
         },
         {
           "lead_day": 1,
-          "n": 1,
+          "n": 4,
           "brier": 0,
           "accuracy": 1
         },
@@ -474,39 +838,51 @@
           "n": 1,
           "brier": 0.001,
           "accuracy": 1
+        },
+        {
+          "lead_day": 4,
+          "n": 1,
+          "brier": 0,
+          "accuracy": 1
         }
       ]
     },
     "dongguan": {
       "name": "东莞",
-      "n_pairs": 1,
-      "brier_score": 0.009,
+      "n_pairs": 5,
+      "brier_score": 0.003,
       "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
+          "n": 4,
+          "brier": 0.004,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
           "n": 1,
-          "brier": 0.009,
+          "brier": 0.001,
           "accuracy": 1
         }
       ]
     },
     "chengdu": {
       "name": "成都",
-      "n_pairs": 7,
-      "brier_score": 0.709,
-      "categorical_accuracy": 0.429,
+      "n_pairs": 14,
+      "brier_score": 0.481,
+      "categorical_accuracy": 0.643,
       "by_lead_day": [
         {
           "lead_day": 0,
-          "n": 4,
-          "brier": 0.701,
-          "accuracy": 0.25
+          "n": 7,
+          "brier": 0.467,
+          "accuracy": 0.571
         },
         {
           "lead_day": 1,
-          "n": 1,
-          "brier": 0.198,
+          "n": 4,
+          "brier": 0.084,
           "accuracy": 1
         },
         {
@@ -520,25 +896,31 @@
           "n": 1,
           "brier": 1.917,
           "accuracy": 0
+        },
+        {
+          "lead_day": 4,
+          "n": 1,
+          "brier": 1.166,
+          "accuracy": 0
         }
       ]
     },
     "xian": {
       "name": "西安",
-      "n_pairs": 7,
-      "brier_score": 0.329,
-      "categorical_accuracy": 0.571,
+      "n_pairs": 14,
+      "brier_score": 0.225,
+      "categorical_accuracy": 0.786,
       "by_lead_day": [
         {
           "lead_day": 0,
-          "n": 4,
-          "brier": 0.478,
-          "accuracy": 0.25
+          "n": 7,
+          "brier": 0.294,
+          "accuracy": 0.571
         },
         {
           "lead_day": 1,
-          "n": 1,
-          "brier": 0.052,
+          "n": 4,
+          "brier": 0.157,
           "accuracy": 1
         },
         {
@@ -552,19 +934,31 @@
           "n": 1,
           "brier": 0.101,
           "accuracy": 1
+        },
+        {
+          "lead_day": 4,
+          "n": 1,
+          "brier": 0.13,
+          "accuracy": 1
         }
       ]
     },
     "wuhan": {
       "name": "武汉",
-      "n_pairs": 1,
-      "brier_score": 0.016,
+      "n_pairs": 5,
+      "brier_score": 0.013,
       "categorical_accuracy": 1,
       "by_lead_day": [
         {
           "lead_day": 0,
+          "n": 4,
+          "brier": 0.011,
+          "accuracy": 1
+        },
+        {
+          "lead_day": 1,
           "n": 1,
-          "brier": 0.016,
+          "brier": 0.023,
           "accuracy": 1
         }
       ]
