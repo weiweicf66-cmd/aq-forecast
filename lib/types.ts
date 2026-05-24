@@ -46,5 +46,6 @@ export type EvalDocument = {
     brier_score: number | null;
     categorical_accuracy: number | null;
   };
+  by_lead_day_overall?: LeadDayMetric[];
   city_metrics: Record<string, CityEvalMetric>;
 };

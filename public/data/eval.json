@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-05-23T03:16:15.128Z",
+  "generated_at": "2026-05-23T03:23:26.967Z",
   "evaluation_window_days": 14,
   "ground_truth_source": "open-meteo reanalysis (past_days)",
   "today": "2026-05-23",
@@ -8,6 +8,32 @@
     "brier_score": 0.199,
     "categorical_accuracy": 0.847
   },
+  "by_lead_day_overall": [
+    {
+      "lead_day": 0,
+      "n": 41,
+      "brier": 0.167,
+      "accuracy": 0.854
+    },
+    {
+      "lead_day": 1,
+      "n": 6,
+      "brier": 0.227,
+      "accuracy": 0.833
+    },
+    {
+      "lead_day": 2,
+      "n": 6,
+      "brier": 0.223,
+      "accuracy": 0.833
+    },
+    {
+      "lead_day": 3,
+      "n": 6,
+      "brier": 0.359,
+      "accuracy": 0.833
+    }
+  ],
   "city_metrics": {
     "beijing": {
       "name": "北京",

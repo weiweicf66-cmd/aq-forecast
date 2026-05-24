@@ -1,4 +1,4 @@
-import type { EvalDocument } from "@/lib/types";
+import type { EvalDocument, LeadDayMetric } from "@/lib/types";
 
 function fmtPct(x: number | null | undefined, digits = 0): string {
   if (typeof x !== "number") return "—";
@@ -42,6 +42,10 @@ export function EvalSummary({ data }: { data: EvalDocument }) {
             />
           </div>
 
+          {data.by_lead_day_overall && data.by_lead_day_overall.length > 0 && (
+            <LeadDayBreakdown rows={data.by_lead_day_overall} />
+          )}
+
           {enoughData ? (
             <CityBreakdown data={data} />
           ) : (
@@ -61,6 +65,47 @@ function Stat({ label, value, hint }: { label: string; value: string; hint: stri
       <span className="text-xs text-zinc-500">{label}</span>
       <span className="text-lg font-semibold tabular-nums">{value}</span>
       <span className="text-[10px] text-zinc-400">{hint}</span>
+    </div>
+  );
+}
+
+function LeadDayBreakdown({ rows }: { rows: LeadDayMetric[] }) {
+  // 补齐 lead 0-6，无数据置 null（保持视觉等宽）
+  const byLead = new Map(rows.map((r) => [r.lead_day, r]));
+  const cols: Array<{ lead: number; r: LeadDayMetric | null }> = [];
+  for (let i = 0; i <= 6; i++) cols.push({ lead: i, r: byLead.get(i) ?? null });
+
+  return (
+    <div className="flex flex-col gap-1">
+      <div className="flex items-baseline justify-between">
+        <span className="text-xs font-medium text-zinc-600 dark:text-zinc-400">按预报时效</span>
+        <span className="text-[10px] text-zinc-400">越靠后（今天预报后第 N 天）通常越不准</span>
+      </div>
+      <div className="grid grid-cols-7 gap-1.5">
+        {cols.map(({ lead, r }) => {
+          const muted = !r || r.n < 5;
+          const label = lead === 0 ? "当日" : `+${lead}d`;
+          return (
+            <div
+              key={lead}
+              className={`flex flex-col items-center gap-0.5 rounded-md border px-1 py-1.5 ${
+                muted
+                  ? "border-zinc-100 bg-zinc-50 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-950"
+                  : "border-zinc-200 bg-white text-zinc-900 dark:border-zinc-700 dark:bg-zinc-900 dark:text-zinc-100"
+              }`}
+              title={r ? `Brier ${r.brier.toFixed(3)} · 样本 ${r.n}` : "暂无样本"}
+            >
+              <span className="text-[10px] text-zinc-500">{label}</span>
+              <span className="text-sm font-semibold tabular-nums">
+                {r ? `${Math.round(r.accuracy * 100)}%` : "—"}
+              </span>
+              <span className="text-[10px] tabular-nums text-zinc-400">
+                {r ? `n=${r.n}` : ""}
+              </span>
+            </div>
+          );
+        })}
+      </div>
     </div>
   );
 }

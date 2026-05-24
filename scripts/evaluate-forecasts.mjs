@@ -8,7 +8,7 @@
 //   3. 把每个 (commit_date, predicted_day) 配对，predicted_day < today 才可评估
 //   4. 计算 Brier score 和分类准确率，按城市 + 按 lead day 拆分
 
-import { writeFile, mkdir } from "node:fs/promises";
+import { readFile, writeFile, mkdir } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import path from "node:path";
 
@@ -18,58 +18,10 @@ const BRANCH = "main";
 const TOKEN = process.env.GITHUB_TOKEN || "";
 const EVAL_WINDOW_DAYS = 14;
 
-const CITIES = [
-  { id: "beijing",      name: "北京",   lat: 39.9042, lon: 116.4074 },
-  { id: "tianjin",      name: "天津",   lat: 39.0851, lon: 117.1995 },
-  { id: "shijiazhuang", name: "石家庄", lat: 38.0428, lon: 114.5149 },
-  { id: "tangshan",     name: "唐山",   lat: 39.6320, lon: 118.1804 },
-  { id: "qinhuangdao",  name: "秦皇岛", lat: 39.9354, lon: 119.6004 },
-  { id: "handan",       name: "邯郸",   lat: 36.6256, lon: 114.5391 },
-  { id: "xingtai",      name: "邢台",   lat: 37.0682, lon: 114.5048 },
-  { id: "baoding",      name: "保定",   lat: 38.8748, lon: 115.4646 },
-  { id: "zhangjiakou",  name: "张家口", lat: 40.8242, lon: 114.9087 },
-  { id: "chengde",      name: "承德",   lat: 40.9758, lon: 117.9382 },
-  { id: "cangzhou",     name: "沧州",   lat: 38.3045, lon: 116.8388 },
-  { id: "langfang",     name: "廊坊",   lat: 39.5188, lon: 116.7035 },
-  { id: "hengshui",     name: "衡水",   lat: 37.7349, lon: 115.6705 },
-  { id: "taiyuan",      name: "太原",   lat: 37.8706, lon: 112.5489 },
-  { id: "datong",       name: "大同",   lat: 40.0768, lon: 113.3001 },
-  { id: "yangquan",     name: "阳泉",   lat: 37.8574, lon: 113.5817 },
-  { id: "changzhi",     name: "长治",   lat: 36.1955, lon: 113.1163 },
-  { id: "jincheng",     name: "晋城",   lat: 35.4910, lon: 112.8513 },
-  { id: "shuozhou",     name: "朔州",   lat: 39.3315, lon: 112.4329 },
-  { id: "jinzhong",     name: "晋中",   lat: 37.6873, lon: 112.7528 },
-  { id: "yuncheng",     name: "运城",   lat: 35.0263, lon: 111.0067 },
-  { id: "xinzhou",      name: "忻州",   lat: 38.4163, lon: 112.7344 },
-  { id: "linfen",       name: "临汾",   lat: 36.0883, lon: 111.5190 },
-  { id: "lvliang",      name: "吕梁",   lat: 37.5191, lon: 111.1442 },
-  { id: "jinan",        name: "济南",   lat: 36.6512, lon: 117.1201 },
-  { id: "zibo",         name: "淄博",   lat: 36.8136, lon: 118.0548 },
-  { id: "zaozhuang",    name: "枣庄",   lat: 34.8107, lon: 117.3236 },
-  { id: "jining",       name: "济宁",   lat: 35.4150, lon: 116.5871 },
-  { id: "taian",        name: "泰安",   lat: 36.1944, lon: 117.0879 },
-  { id: "liaocheng",    name: "聊城",   lat: 36.4565, lon: 115.9854 },
-  { id: "dezhou",       name: "德州",   lat: 37.4346, lon: 116.3578 },
-  { id: "binzhou",      name: "滨州",   lat: 37.3866, lon: 117.9707 },
-  { id: "zhengzhou",    name: "郑州",   lat: 34.7466, lon: 113.6253 },
-  { id: "kaifeng",      name: "开封",   lat: 34.7986, lon: 114.3074 },
-  { id: "anyang",       name: "安阳",   lat: 36.0991, lon: 114.3931 },
-  { id: "hebi",         name: "鹤壁",   lat: 35.7474, lon: 114.2954 },
-  { id: "xinxiang",     name: "新乡",   lat: 35.3030, lon: 113.9268 },
-  { id: "jiaozuo",      name: "焦作",   lat: 35.2159, lon: 113.2418 },
-  { id: "puyang",       name: "濮阳",   lat: 35.7681, lon: 115.0292 },
-  { id: "shanghai",     name: "上海",   lat: 31.2304, lon: 121.4737 },
-  { id: "nanjing",      name: "南京",   lat: 32.0617, lon: 118.7778 },
-  { id: "suzhou",       name: "苏州",   lat: 31.2989, lon: 120.5853 },
-  { id: "hangzhou",     name: "杭州",   lat: 30.2741, lon: 120.1551 },
-  { id: "guangzhou",    name: "广州",   lat: 23.1291, lon: 113.2644 },
-  { id: "shenzhen",     name: "深圳",   lat: 22.5431, lon: 114.0579 },
-  { id: "dongguan",     name: "东莞",   lat: 23.0207, lon: 113.7517 },
-  { id: "chengdu",      name: "成都",   lat: 30.5728, lon: 104.0668 },
-  { id: "xian",         name: "西安",   lat: 34.3416, lon: 108.9398 },
-  { id: "wuhan",        name: "武汉",   lat: 30.5928, lon: 114.3055 },
-];
-/* 注意：评估脚本需 evaluate 所有有数据的城市；新加的 26 城市等积累 forecast 后才会出现 pairs。*/
+// 城市列表唯一源：lib/cities.json
+const __here = path.dirname(fileURLToPath(import.meta.url));
+const CITIES = JSON.parse(await readFile(path.join(__here, "../lib/cities.json"), "utf8"));
+/* 评估脚本会处理 cities.json 里所有城市；新加的城市要等积累 forecast 后才会出现 pairs。*/
 
 const PM25_BREAKS = [
   { high: 35,  cat: "优" },
@@ -252,12 +204,26 @@ async function main() {
     };
   }
 
+  const overallLeadDays = [...new Set(pairs.map((p) => p.leadDay))].sort((a, b) => a - b);
+  const byLeadDayOverall = overallLeadDays.map((ld) => {
+    const lp = pairs.filter((p) => p.leadDay === ld);
+    const lb = lp.map((p) => brierContribution(p.predictedProbs, p.observedCat));
+    const la = lp.map((p) => (p.predictedDominant === p.observedCat ? 1 : 0));
+    return {
+      lead_day: ld,
+      n: lp.length,
+      brier: +(lb.reduce((s, x) => s + x, 0) / lb.length).toFixed(3),
+      accuracy: +(la.reduce((s, x) => s + x, 0) / la.length).toFixed(3),
+    };
+  });
+
   const doc = {
     generated_at: new Date().toISOString(),
     evaluation_window_days: EVAL_WINDOW_DAYS,
     ground_truth_source: "open-meteo reanalysis (past_days)",
     today,
     overall,
+    by_lead_day_overall: byLeadDayOverall,
     city_metrics: cityMetrics,
   };
 

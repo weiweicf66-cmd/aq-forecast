@@ -33,12 +33,18 @@ const HEADER = `// !!! 自动生成：由 scripts/build-n8n-code.mjs 从 ${"<src
 // 这是 n8n Code 节点要粘贴的版本。
 `;
 
+const citiesJson = await readFile(path.join(root, "lib/cities.json"), "utf8");
+// 只保留 n8n 实际用到的字段，减小注入体积
+const citiesMinimal = JSON.parse(citiesJson).map(({ id, name, lat, lon }) => ({ id, name, lat, lon }));
+const citiesLiteral = JSON.stringify(citiesMinimal);
+
 for (const { src, dst } of TARGETS) {
   let body = await readFile(path.join(root, src), "utf8");
   for (const k of REQUIRED_VARS) {
     const literal = JSON.stringify(process.env[k]);
     body = body.split(`$vars.${k}`).join(literal);
   }
+  body = body.split("INJECT_CITIES").join(citiesLiteral);
   const header = HEADER.replaceAll("<src>", src);
   await writeFile(path.join(root, dst), header + "\n" + body, "utf8");
   console.log(`✓ ${dst}`);
